@@ -52,7 +52,7 @@ typedef enum {
 
 // Defined Address List
 typedef enum {
-	MPU6050_REGISTER_ADDR_POWER_MANAGEMENT_2 = 0x6C,
+	MPU6050_REGISTER_ADDR_POWER_MANAGEMENT_2 = 0x6B,
 	MPU6050_REGISTER_ADDR_SAMPLING_RATE = 0x19,
 	MPU6050_REGISTER_ADDR_GYRO_RANGE_CONFIG = 0x1B,
 	MPU6050_REGISTER_ADDR_ACCEL_RANGE_CONFIG = 0x1C,
@@ -78,16 +78,16 @@ struct MPU6050_Properties {
 	MPU6050_SamplingRate srRate;
 
 	/* Data Part */
-	int16_t xRawAccValue;
-	int16_t yRawAccValue;
-	int16_t zRawAccValue;
+	uint16_t xRawAccValue;
+	uint16_t yRawAccValue;
+	uint16_t zRawAccValue;
 
-	int16_t xRawGyroValue;
-	int16_t yRawGyroValue;
-	int16_t zRawGyroValue;
+	uint16_t xRawGyroValue;
+	uint16_t yRawGyroValue;
+	uint16_t zRawGyroValue;
 
-	int16_t rawTempValue;
-	int16_t tempValue;
+	uint16_t rawTempValue;
+	float tempValue;
 
 	float xAccValue;
 	float yAccValue;

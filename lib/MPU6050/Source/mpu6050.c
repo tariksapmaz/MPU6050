@@ -10,6 +10,7 @@
 //**************** MPU6050 CODES ****************//
 
 bool MPU6050WakeUpSensor(I2C_HandleTypeDef *I2Cx) {
+
 	if (MPU6050CheckProperties() == false)
 		return false;
 
@@ -34,7 +35,9 @@ bool MPU6050WakeUpSensor(I2C_HandleTypeDef *I2Cx) {
 	return true;
 }
 
-bool MPU6050SetAccelerometerRange(I2C_HandleTypeDef *I2Cx, MPU6050_AccRange accRange) {
+bool MPU6050SetAccelerometerRange(I2C_HandleTypeDef *I2Cx,
+		MPU6050_AccRange accRange) {
+
 	if (MPU6050CheckProperties() == false)
 		return false;
 
@@ -43,7 +46,7 @@ bool MPU6050SetAccelerometerRange(I2C_HandleTypeDef *I2Cx, MPU6050_AccRange accR
 
 	// Set Accelerometer Range
 	i2c_buffer[0] = MPU6050_REGISTER_ADDR_ACCEL_RANGE_CONFIG;
-	i2c_buffer[1] = accRange << 2;
+	i2c_buffer[1] = accRange << 3;
 	halI2CResult = HAL_I2C_Master_Transmit(I2Cx, MPU6050Properties.I2CAddress,
 			i2c_buffer, 2, MPU6050_DEFAULT_TIMEOUT_VALUE);
 	if (halI2CResult == HAL_TIMEOUT) {
@@ -64,6 +67,7 @@ bool MPU6050SetAccelerometerRange(I2C_HandleTypeDef *I2Cx, MPU6050_AccRange accR
 }
 
 bool MPU6050SetGyroRange(I2C_HandleTypeDef *I2Cx, MPU6050_GyroRange gyRange) {
+
 	if (MPU6050CheckProperties() == false)
 		return false;
 
@@ -72,7 +76,8 @@ bool MPU6050SetGyroRange(I2C_HandleTypeDef *I2Cx, MPU6050_GyroRange gyRange) {
 
 	// Set Gyroscope Range
 	i2c_buffer[0] = MPU6050_REGISTER_ADDR_GYRO_RANGE_CONFIG;
-	i2c_buffer[1] = gyRange << 2;
+	i2c_buffer[1] = gyRange << 3;
+
 	halI2CResult = HAL_I2C_Master_Transmit(I2Cx, MPU6050Properties.I2CAddress,
 			i2c_buffer, 2, MPU6050_DEFAULT_TIMEOUT_VALUE);
 	if (halI2CResult == HAL_TIMEOUT) {
@@ -93,6 +98,7 @@ bool MPU6050SetGyroRange(I2C_HandleTypeDef *I2Cx, MPU6050_GyroRange gyRange) {
 }
 
 bool MPU6050SetSamplingRate(I2C_HandleTypeDef *I2Cx, MPU6050_SamplingRate sr) {
+
 	if (MPU6050CheckProperties() == false)
 		return false;
 
@@ -122,6 +128,7 @@ bool MPU6050SetSamplingRate(I2C_HandleTypeDef *I2Cx, MPU6050_SamplingRate sr) {
 }
 
 bool MPU6050EnableInterrupts(I2C_HandleTypeDef *I2Cx) {
+
 	if (MPU6050CheckProperties() == false)
 		return false;
 
@@ -309,6 +316,7 @@ bool MPU6050FindDevice(I2C_HandleTypeDef *I2Cx, uint8_t startAddr,
 		}
 	}
 
+	MPU6050ErrorOccured(UninitAddr);
 	return false;
 }
 
@@ -368,8 +376,8 @@ void MPU6050CalibrateData() {
 	MPU6050Properties.zGyroValue = MPU6050Properties.zRawGyroValue
 			/ gyroCalibValue;
 
-	MPU6050Properties.tempValue = -(MPU6050Properties.rawTempValue / 340)
-			+ 36.53;
+	MPU6050Properties.tempValue = -(MPU6050Properties.rawTempValue / 340.0f)
+			+ 36.53f;
 }
 
 //**************** UTILS CODES ****************//
