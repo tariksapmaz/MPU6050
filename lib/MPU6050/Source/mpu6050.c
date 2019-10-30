@@ -34,7 +34,7 @@ bool MPU6050WakeUpSensor(I2C_HandleTypeDef *I2Cx) {
 	return true;
 }
 
-bool MPU6050SetAccelerometerRange(I2C_HandleTypeDef *I2Cx) {
+bool MPU6050SetAccelerometerRange(I2C_HandleTypeDef *I2Cx, MPU6050_AccRange accRange) {
 	if (MPU6050CheckProperties() == false)
 		return false;
 
@@ -43,7 +43,7 @@ bool MPU6050SetAccelerometerRange(I2C_HandleTypeDef *I2Cx) {
 
 	// Set Accelerometer Range
 	i2c_buffer[0] = MPU6050_REGISTER_ADDR_ACCEL_RANGE_CONFIG;
-	i2c_buffer[1] = MPU6050Properties.accRange << 2;
+	i2c_buffer[1] = accRange << 2;
 	halI2CResult = HAL_I2C_Master_Transmit(I2Cx, MPU6050Properties.I2CAddress,
 			i2c_buffer, 2, MPU6050_DEFAULT_TIMEOUT_VALUE);
 	if (halI2CResult == HAL_TIMEOUT) {
@@ -57,10 +57,13 @@ bool MPU6050SetAccelerometerRange(I2C_HandleTypeDef *I2Cx) {
 		return false;
 	}
 
+	// Assign Variables
+	MPU6050Properties.accRange = accRange;
+
 	return true;
 }
 
-bool MPU6050SetGyroRange(I2C_HandleTypeDef *I2Cx) {
+bool MPU6050SetGyroRange(I2C_HandleTypeDef *I2Cx, MPU6050_GyroRange gyRange) {
 	if (MPU6050CheckProperties() == false)
 		return false;
 
@@ -69,7 +72,7 @@ bool MPU6050SetGyroRange(I2C_HandleTypeDef *I2Cx) {
 
 	// Set Gyroscope Range
 	i2c_buffer[0] = MPU6050_REGISTER_ADDR_GYRO_RANGE_CONFIG;
-	i2c_buffer[1] = MPU6050Properties.gyroRange << 2;
+	i2c_buffer[1] = gyRange << 2;
 	halI2CResult = HAL_I2C_Master_Transmit(I2Cx, MPU6050Properties.I2CAddress,
 			i2c_buffer, 2, MPU6050_DEFAULT_TIMEOUT_VALUE);
 	if (halI2CResult == HAL_TIMEOUT) {
@@ -83,16 +86,19 @@ bool MPU6050SetGyroRange(I2C_HandleTypeDef *I2Cx) {
 		return false;
 	}
 
+	// Assign Variables
+	MPU6050Properties.gyroRange = gyRange;
+
 	return true;
 }
 
-bool MPU6050SetSamplingRate(I2C_HandleTypeDef *I2Cx) {
+bool MPU6050SetSamplingRate(I2C_HandleTypeDef *I2Cx, MPU6050_SamplingRate sr) {
 	if (MPU6050CheckProperties() == false)
 		return false;
 
 	uint8_t i2c_buffer[8];
 	i2c_buffer[0] = MPU6050_REGISTER_ADDR_SAMPLING_RATE;
-	i2c_buffer[1] = MPU6050Properties.srRate;
+	i2c_buffer[1] = sr;
 
 	HAL_StatusTypeDef halI2CResult = HAL_I2C_Master_Transmit(I2Cx,
 			MPU6050Properties.I2CAddress, i2c_buffer, 2,
@@ -108,6 +114,9 @@ bool MPU6050SetSamplingRate(I2C_HandleTypeDef *I2Cx) {
 		MPU6050ErrorOccured(BusyI2CInterface);
 		return false;
 	}
+
+	// Assign Variables
+	MPU6050Properties.srRate = sr;
 
 	return true;
 }
@@ -187,12 +196,7 @@ bool MPU6050EnableInterrupts(I2C_HandleTypeDef *I2Cx) {
 }
 
 bool MPU6050Init(I2C_HandleTypeDef *I2Cx, MPU6050_AccRange accRange,
-		MPU6050_GyroRange gyroRange, MPU6050_SamplingRate srRate) {
-
-	// Assign Variables
-	MPU6050Properties.accRange = accRange;
-	MPU6050Properties.gyroRange = gyroRange;
-	MPU6050Properties.srRate = srRate;
+		MPU6050_GyroRange gyroRange, MPU6050_SamplingRate sr) {
 
 	// Reset All Variables
 	MPU6050Properties.I2CAddress = 0xD0;
@@ -222,13 +226,13 @@ bool MPU6050Init(I2C_HandleTypeDef *I2Cx, MPU6050_AccRange accRange,
 	if (MPU6050WakeUpSensor(I2Cx) == false)
 		return false;
 
-	if (MPU6050SetAccelerometerRange(I2Cx) == false)
+	if (MPU6050SetAccelerometerRange(I2Cx, accRange) == false)
 		return false;
 
-	if (MPU6050SetGyroRange(I2Cx) == false)
+	if (MPU6050SetGyroRange(I2Cx, gyroRange) == false)
 		return false;
 
-	if (MPU6050SetSamplingRate(I2Cx) == false)
+	if (MPU6050SetSamplingRate(I2Cx, sr) == false)
 		return false;
 
 	if (MPU6050EnableInterrupts(I2Cx) == false)

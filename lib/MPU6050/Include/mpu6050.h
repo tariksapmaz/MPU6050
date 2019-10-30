@@ -145,9 +145,10 @@ bool MPU6050WakeUpSensor(I2C_HandleTypeDef *I2Cx);
  *
  * @brief Set Accelerometer Range
  * @param current i2c interface for MPU6050
+ * @param MPU6050 accelerometer range value
  * @return process result
  */
-bool MPU6050SetAccelerometerRange(I2C_HandleTypeDef *I2Cx);
+bool MPU6050SetAccelerometerRange(I2C_HandleTypeDef *I2Cx, MPU6050_AccRange accRange);
 
 /**
  * MPU6050 has a several gyro range. In this way,
@@ -156,16 +157,18 @@ bool MPU6050SetAccelerometerRange(I2C_HandleTypeDef *I2Cx);
  *
  * @brief Set Accelerometer Range
  * @param current i2c interface for MPU6050
+ * @param MPU6050 gyroscope range value
  * @return process result
  */
-bool MPU6050SetGyroRange(I2C_HandleTypeDef *I2Cx);
+bool MPU6050SetGyroRange(I2C_HandleTypeDef *I2Cx, MPU6050_GyroRange gyRange);
 
 /**
  * @brief Set Sampling Rate
  * @param current i2c interface for MPU6050
+ * @param MPU6050 sampling rate
  * @return process result
  */
-bool MPU6050SetSamplingRate(I2C_HandleTypeDef *I2Cx);
+bool MPU6050SetSamplingRate(I2C_HandleTypeDef *I2Cx, MPU6050_SamplingRate sr);
 
 /**
  * @brief Enable interrupt
@@ -180,7 +183,7 @@ bool MPU6050EnableInterrupts(I2C_HandleTypeDef *I2Cx);
  * @return process result
  */
 bool MPU6050Init(I2C_HandleTypeDef *I2Cx, MPU6050_AccRange accRange,
-		MPU6050_GyroRange gyroRange, MPU6050_SamplingRate srRate);
+		MPU6050_GyroRange gyroRange, MPU6050_SamplingRate sr);
 
 /**
  * @brief read accelerometer values
