@@ -91,7 +91,7 @@ int main(void) {
 	/* USER CODE BEGIN 2 */
 
 	// We defined our code after I2C Init...
-	if (MPU6050Init(&hi2c1, AR2, GR500, SR1000Hz) == false) {
+	if (MPU6050Init(&hi2c1, AR4, GR500, SR1000Hz) == false) {
 		// Handle error if can't init.
 		// You can see error code and string
 		MPU6050_ErrorCode errorCode = MPU6050ErrorProperties.errorCode;
@@ -108,6 +108,7 @@ int main(void) {
 		 * Read as much as you can,
 		 * we don't care about sampling rate.
 		 */
+		HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, RESET); // For measuring I2C process
 		if (MPU6050ReadAccelValues(&hi2c1) == false) {
 			// Handle error if can't read.
 			// You can see error code and string
@@ -126,6 +127,7 @@ int main(void) {
 			float yGyroValue = MPU6050Properties.yGyroValue;
 			float zGyroValue = MPU6050Properties.zGyroValue;
 		}
+		HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, SET); // For measuring I2C process
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
