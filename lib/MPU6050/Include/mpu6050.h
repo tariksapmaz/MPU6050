@@ -20,7 +20,7 @@
 //
 // NOTE: You cannot set accelerometer rate than 1kHz.
 typedef enum {
-	SR8000 = 0,
+	SR8000Hz = 0,
 	SR4000Hz = 1,
 	SR2000Hz = 3,
 	SR1000Hz = 7,
